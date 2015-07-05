@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+		    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		    xmlns:aop="http://www.springframework.org/schema/aop"
+		    xmlns:context="http://www.springframework.org/schema/context"
+		    xmlns:tx="http://www.springframework.org/schema/tx"
+		    xsi:schemaLocation="
+   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+   http://www.springframework.org/schema/context 
+   http://www.springframework.org/schema/context/spring-context-3.2.xsd
+   http://www.springframework.org/schema/aop 
+   http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+   http://www.springframework.org/schema/tx 
+   http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+	<!--spring ioc  -->
+   <bean id="account" class="spring.ex.eagle.tran.Account">
+   		<property name="name" value="chinago"/>
+   		<property name="balance" value="8899"/>
+   </bean>
+   
+   <bean id="accountDao" class="spring.ex.eagle.tran.dao.AccountDaoImpl">
+   		<property name="sessionFactory" ref="sessionFactory"/>
+   </bean>
+   
+   <bean id="accountService" class="spring.ex.eagle.tran.service.AccountServiceImpl">
+   		<property name="accountDao" ref="accountDao"/>
+   </bean>
+   <bean class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
+		name="sessionFactory">
+		<property name="dataSource" ref="dataSource">
+		</property>
+		<property name="hibernateProperties">
+	   		<props>
+	    		<prop  key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+	    		<prop key="hibernate.show_sql">true</prop>
+	    		<prop key="hibernate.hbm2ddl.auto">update</prop>
+	    		<!-- <prop key="current_session_context_class">thread</prop> -->
+	   		</props>
+		</property>
+		<property name="mappingResources">
+		   	<list>
+		   		 <value>spring/ex/eagle/tran/hibernate/account.hbm.xml</value>
+		   	</list>
+		</property>
+	</bean>
+   <bean id="dataSource" class="oracle.jdbc.pool.OracleConnectionPoolDataSource">
+		<property name="networkProtocol">
+			<value>tcp</value>
+		</property>
+		<property name="databaseName">
+			<value>xe</value>
+		</property>
+		<property name="driverType">
+			<value>thin</value>
+		</property>
+		<property name="portNumber">
+			<value>1521</value>
+		</property>
+		<property name="user">
+			<value>ex</value>
+		</property>
+		<property name="serverName">
+			<value>localhost</value>
+		</property>
+		<property name="password">
+			<value>ex</value>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+       <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <!-- spring aop-->
+    <tx:advice id="smAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED"/>
+			<tx:method name="update*" propagation="REQUIRED"/>
+			<tx:method name="rem*" propagation="REQUIRED"/>
+		</tx:attributes>
+	</tx:advice>
+   <aop:config>
+   		<aop:pointcut expression="execution(* spring.ex.eagle.tran.service.*.*(..))" 
+   		id="MyPointCut"/>
+   		<aop:advisor advice-ref="smAdvice" pointcut-ref="MyPointCut"/>
+   </aop:config>
+</beans>

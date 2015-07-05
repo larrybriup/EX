@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	<bean id="abstractDog" class="spring.ex.eagle1.bean.Dog" abstract="true">
+		<property name="owner" value="大超"></property>
+	</bean>
+	<bean id="dog1" parent="abstractDog">
+		<property name="name" value="戴鑫"></property>
+		<property name="color" value="黑色"></property>
+	</bean>
+	<bean id="dog2" parent="abstractDog">
+		<property name="name" value="小戴鑫"></property>
+		<property name="color" value="灰色"></property>
+	</bean>
+</beans>
+           

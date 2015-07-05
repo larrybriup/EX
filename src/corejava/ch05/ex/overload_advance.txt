@@ -1,0 +1,11 @@
+思考：
+1、建立Printer类。提供数据的打印功能。重载打印操作以打印int、short、long、float、double类型数据
+2、创建PrinterTest类，在main()分别传递int、short、long、float、double类型数据调用Printer的打印功能，观察执行了哪个操作。
+3、注释Printer类中打印int和float的方法。重新执行step2，观察执行了哪个操作，为什么会执行这个操作？
+
+
+
+
+
+
+
